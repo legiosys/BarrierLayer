@@ -28,6 +28,7 @@
     },
     "Docker": {
       "commandName": "Docker",
+      "commandLineArgs": "--link postgres",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true

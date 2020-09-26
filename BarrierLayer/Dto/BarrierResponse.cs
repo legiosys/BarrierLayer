@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BarrierLayer.Models
 {
-    public class StateResponse
+    public class BarrierResponse
     {
         public string Key { get; set; }
         public string Login { get; set; }

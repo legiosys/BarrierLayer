@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BarrierLayer.Models;
+using BarrierLayer.Services;
 using Flurl;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,17 @@ namespace BarrierLayer
     [ApiController]
     public class BarrierController : ControllerBase
     {
+        private readonly BarrierService _barrierService;
+
+        public BarrierController(BarrierService barrierService)
+        {
+           /* _user = new User()
+            {
+                Number = "+79851590409",
+                Token = Guid.Parse("1b92654f6afcd96f801eac91b0ea8b52")
+            };*/
+            _barrierService = barrierService;
+        }
         string url = "https://api.privratnik.net:44590/app/api.php";
         [HttpGet]
         public async Task<string> Get()
@@ -22,19 +34,15 @@ namespace BarrierLayer
             return Request.Path;
         }
         //key 1b92654f6afcd96f801eac91b0ea8b52
+        //classes3 api
 
-        [HttpPost("number")]
-        public async Task<bool> SendSms(string number)
+
+        [HttpPost("open")]
+        public async Task Open(Guid userKey, int barrierId)
         {
-            var response = await url.AppendPathSegment("sendSms").PostUrlEncodedAsync(new { number = number });
-            return response.StatusCode == System.Net.HttpStatusCode.OK;
+            await _barrierService.Open(userKey, barrierId);
         }
 
-        [HttpPost("checkCode")]
-        public async Task<StateResponse> CheckCode(string number, string code)
-        {
-            var response = await url.AppendPathSegment("checkCode").PostUrlEncodedAsync(new { number = number, smsCode = code }).ReceiveJson<StateResponse>();
-            return response;
-        }
+        
     }
 }
