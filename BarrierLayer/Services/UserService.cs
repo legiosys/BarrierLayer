@@ -24,6 +24,7 @@ namespace BarrierLayer.Services
 
         public async Task<Guid> CreateUser(string number, string password)
         {
+            number = number.FormatToNumber();
             if (!number.ValidateNumber()) throw new ArgumentException("Плохой номер телефона");
             await _config.VerifyPassword(password);
             var user = new User()
@@ -39,6 +40,7 @@ namespace BarrierLayer.Services
 
         public async Task<Guid> RegisterApp(string number, Guid token)
         {
+            number = number.FormatToNumber();
             if (!number.ValidateNumber()) throw new ArgumentException("Плохой номер телефона");
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Number == number);
             if (user == null || !user.Token.Equals(token))
@@ -64,6 +66,7 @@ namespace BarrierLayer.Services
 
         public async Task AddBarrierToUser(int barrierId, string userNumber)
         {
+            userNumber = userNumber.FormatToNumber();
             if (!userNumber.ValidateNumber()) throw new ArgumentException("Плохой номер телефона");
             var user = await _db.GetUserByNumber(userNumber);
             var barrier = await _db.Barriers.FirstOrDefaultAsync(b => b.Id == barrierId);

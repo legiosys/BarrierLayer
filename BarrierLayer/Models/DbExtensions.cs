@@ -16,7 +16,8 @@ namespace BarrierLayer.Models
                 dbSet.Add(entity);
             else
             {
-                dbSet.Update(entity);
+                dbSet.Remove(exist);
+                dbSet.Add(entity);
             }
                 
         }

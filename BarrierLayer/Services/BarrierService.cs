@@ -37,6 +37,8 @@ namespace BarrierLayer.Services
         }
         public async Task<BarrierAddResult> Register(string userNumber, string barrierNumber, BarrierType type)
         {
+            userNumber = userNumber.FormatToNumber();
+            barrierNumber = barrierNumber.FormatToNumber();
             var analog = await _db.Barriers.FirstOrDefaultAsync(b => b.BarrierType == type && b.UserNumber.Equals(userNumber));
             var barrier = new Barrier()
             {
@@ -82,6 +84,8 @@ namespace BarrierLayer.Services
         }
         public async Task<BarrierAddResult> AddManual(string userNumber, string barrierNumber, BarrierType type, string token)
         {
+            userNumber = userNumber.FormatToNumber();
+            barrierNumber = barrierNumber.FormatToNumber();
             var barrier = new Barrier()
             {
                 BarrierNumber = barrierNumber,
