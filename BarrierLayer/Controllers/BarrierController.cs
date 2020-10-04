@@ -34,13 +34,22 @@ namespace BarrierLayer
             return Request.Path;
         }
         //key 1b92654f6afcd96f801eac91b0ea8b52
-        //classes3 api
+        //classes3 api 74999950866
+        //4849 65637c20-c978-4db0-8134-523e2759e832
 
-
-        [HttpPost("open")]
-        public async Task Open(Guid userKey, int barrierId)
+        [HttpPost("OpenBarrier")]
+        public async Task<bool> Open(Guid userKey, int barrierId)
         {
-            await _barrierService.Open(userKey, barrierId);
+            Console.WriteLine($"{userKey} trying open barrier {barrierId}");
+            try
+            {
+                await _barrierService.Open(userKey, barrierId);
+                return true;
+            }
+            catch( Exception )
+            {
+                return false;
+            }
         }
 
         

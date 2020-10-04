@@ -26,6 +26,14 @@ namespace BarrierLayer.Models
         {
             return await db.Users.Include(y => y.Barriers).FirstOrDefaultAsync(u => u.Token == token);
         }
+
+        public static async Task<List<Barrier>> GetUserBarriers(this DomainContext db, Guid token)
+        {
+            var user = await db.GetUserByToken(token);
+            if (user?.Barriers == null) return new List<Barrier>();
+            var barrierIds = user.Barriers.Select(x => x.BarrierId).ToList();
+            return await db.Barriers.Where(b => barrierIds.Contains(b.Id)).ToListAsync();
+        }
         public static async Task<User> GetUserByNumber(this DomainContext db, string number)
         {
             return await db.Users.Include(y => y.Barriers).FirstOrDefaultAsync(u => u.Number == number);

@@ -16,7 +16,7 @@ namespace BarrierLayer.Models
            : base(options)
         {
             //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            Database.Migrate();
         }
         protected override void OnModelCreating(ModelBuilder model)
         {

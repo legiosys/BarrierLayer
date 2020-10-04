@@ -52,10 +52,9 @@ namespace BarrierLayer.Services
             return user.Token;
         }
 
-        public async Task<List<int>> GetBarrierList(Guid userKey)
+        public async Task<List<BarrierForUserDto>> GetBarrierList(Guid userKey)
         {
-            var user = await _db.GetUserByToken(userKey);
-            return user.Barriers?.Select(b => b.BarrierId).ToList();
+            return (await _db.GetUserBarriers(userKey)).Select(b => new BarrierForUserDto() { Id = b.Id, Address = b.Address }).ToList();
         }
         public async Task<List<BarrierDto>> GetBarrierList(string password)
         {
