@@ -6,8 +6,8 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["BarrierLayer.csproj", ""]
-RUN dotnet restore "BarrierLayer.csproj"
+COPY ["BarrierLayer/BarrierLayer.csproj", "BarrierLayer/"]
+RUN dotnet restore "BarrierLayer/BarrierLayer.csproj"
 COPY . .
 WORKDIR "/src/BarrierLayer"
 RUN dotnet build "BarrierLayer.csproj" -c Release -o /app/build
