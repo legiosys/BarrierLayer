@@ -6,6 +6,7 @@ using Flurl;
 using Flurl.Http;
 using System.Threading.Tasks;
 using BarrierLayer.Models;
+using Newtonsoft.Json;
 
 namespace BarrierLayer.Barriers
 {
@@ -38,6 +39,7 @@ namespace BarrierLayer.Barriers
                         from = _barrier.UserNumber,
                         to = _barrier.BarrierNumber
                     }).ReceiveJson<StateResponse>();
+            Console.WriteLine($"Open result: {JsonConvert.SerializeObject(response)}");
             return response.ToBarrierResponse();
         }
         public async Task<BarrierResponse> Open()
