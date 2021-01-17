@@ -50,12 +50,16 @@ namespace BarrierLayer.Barriers
             }
             catch(FlurlHttpException ex)
             {
-                if(ex.Message.Contains("Connection refused"))
+                if (ex.Message.Contains("Connection refused"))
                 {
                     return await OpenWithRefused();
                 }
+                else
+                {
+                    Console.WriteLine($"Error open: {ex.Message}");
+                    throw;
+                }
             }
-            return new BarrierResponse() { State = -1 };
         }
 
         public async Task<BarrierResponse> Register(string userNumber)
