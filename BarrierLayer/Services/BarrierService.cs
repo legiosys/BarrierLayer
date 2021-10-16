@@ -21,20 +21,27 @@ namespace BarrierLayer.Services
             _db = db;
             _barrierFactory = barrierFactory;
         }
-        private async Task<IBarrierFacade> GetBarrier(Guid userKey, int barrierId)
+        private async Task<Barrier> GetBarrier(Guid userKey, int barrierId)
         {
             var user = await _db.GetUserByToken(userKey);
             if (user == null) throw new ArgumentException("Пользователь не найден");
             var barrier = user.Barriers.FirstOrDefault(b => b.BarrierId == barrierId);
             if (barrier == null) throw new ArgumentException("Шлагбаум не найден");
-            return _barrierFactory.Create(await _db.GetBarrierById(barrierId));
+            return await _db.GetBarrierById(barrierId);
         }
 
         public async Task Open(Guid userKey, int barrierId)
         {
             var barrier = await GetBarrier(userKey, barrierId);
-            await barrier.Open();
+            await Open(barrier);
         }
+
+        public async Task Open(Barrier barrier)
+        {
+            var barrierFacade = _barrierFactory.Create(barrier);
+            await barrierFacade.Open();
+        }
+        
         public async Task<BarrierAddResult> Register(string userNumber, string barrierNumber, BarrierType type)
         {
             userNumber = userNumber.FormatToNumber();

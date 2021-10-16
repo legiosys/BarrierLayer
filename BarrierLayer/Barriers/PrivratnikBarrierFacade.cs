@@ -31,16 +31,18 @@ namespace BarrierLayer.Barriers
         private async Task<BarrierResponse> OpenWithRefused()
         {
             var response = await _url.AppendPathSegment("openAddedBarrier")
-                    .PostUrlEncodedAsync(
-                    new
-                    {
-                        login = _barrier.UserNumber,
-                        key = _barrier.Token,
-                        from = _barrier.UserNumber,
-                        to = _barrier.BarrierNumber
-                    }).ReceiveJson<StateResponse>();
-            Console.WriteLine($"Open result: {JsonConvert.SerializeObject(response)}");
-            return response.ToBarrierResponse();
+                        .PostUrlEncodedAsync(
+                        new
+                        {
+                            login = _barrier.UserNumber,
+                            key = _barrier.Token,
+                            from = _barrier.UserNumber,
+                            to = _barrier.BarrierNumber
+                        });
+            var responseString = await response.GetStringAsync();
+            Console.WriteLine($"Open result {response.StatusCode}: {responseString}");
+            var responseJson = JsonConvert.DeserializeObject<StateResponse>(responseString);
+            return responseJson.ToBarrierResponse();
         }
         public async Task<BarrierResponse> Open()
         {

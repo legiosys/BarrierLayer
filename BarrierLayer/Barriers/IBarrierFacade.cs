@@ -10,6 +10,7 @@ namespace BarrierLayer.Barriers
     {
         public async Task<BarrierResponse> Open()
         {
+            Console.WriteLine("Test barrier opened");
             await Task.Delay(1);
             return new BarrierResponse();
         }
@@ -21,7 +22,10 @@ namespace BarrierLayer.Barriers
         public async Task<BarrierResponse> Confirm(string userNumber, string code)
         {
             await Task.Delay(1);
-            return new BarrierResponse();
+            return new BarrierResponse()
+            {
+                Key = code
+            };
         }
     }
     public interface IBarrierFacade

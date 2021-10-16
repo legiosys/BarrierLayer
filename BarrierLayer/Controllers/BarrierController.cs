@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BarrierLayer.Dto;
 using BarrierLayer.Models;
 using BarrierLayer.Services;
 using Flurl;
@@ -51,7 +52,5 @@ namespace BarrierLayer
                 return false;
             }
         }
-
-        
     }
 }

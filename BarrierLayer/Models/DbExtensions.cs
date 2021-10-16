@@ -43,5 +43,8 @@ namespace BarrierLayer.Models
         {
             return await db.Barriers.FirstOrDefaultAsync(b => b.Id == id);
         }
+
+        public static Task<Guest> Guest_ById(this DomainContext db, Guid id)
+            => db.Guests.Include(x => x.Barrier).FirstOrDefaultAsync(x => x.Id == id);
     }
 }
