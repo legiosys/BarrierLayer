@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BarrierLayer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class GuestController : ControllerBase
     {
         private readonly GuestBarrierService _guestBarrierService;

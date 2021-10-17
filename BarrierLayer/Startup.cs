@@ -46,7 +46,7 @@ namespace BarrierLayer
             services.AddSwaggerGenNewtonsoftSupport();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Thermo Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BarrierLayer Api", Version = "v1" });
             });
             services.AddMvc();
         }
@@ -79,7 +79,8 @@ namespace BarrierLayer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute("guest", "/ui/guest", new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("", "/", new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("guest", "/ui/guest/{id:guid}", new {controller = "home", action = "index"});
             });
         }
     }
