@@ -12,6 +12,7 @@ namespace BarrierLayer.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Configuration> Settings { get; set; }
         public DbSet<UserBarrier> UserBarriers { get; set; }
+        public DbSet<Guest> Guests { get; set; }
         public DomainContext(DbContextOptions<DomainContext> options)
            : base(options)
         {
