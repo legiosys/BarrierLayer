@@ -81,6 +81,7 @@ namespace BarrierLayer
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("", "/", new {controller = "home", action = "index"});
                 endpoints.MapControllerRoute("guest", "/ui/guest/{id:guid}", new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("guestAdmin", "/ui/admin/guest", new {controller = "home", action = "index"});
             });
         }
     }

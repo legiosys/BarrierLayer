@@ -1,10 +1,10 @@
 ﻿<template>
-  <div id="guest" class="text-center vertical-align-center">
+  <div class="text-center vertical-align-center">
     <div v-if="infoMessage" :class="infoMessage.classes">{{infoMessage.text}}</div>
     <div v-if="guest">
       <p class="alert alert-success" role="alert">Гостевой доступ по адресу:<br><strong>{{ guest?.address }}</strong></p>
       <p class="alert alert-info">Истекает: <br> <strong>{{ expire?.toLocaleString() ?? "" }}</strong></p>
-      <button :class="openButton" class="btn btn-success" style="align-self: end;" v-on:click="openBarrier">Открыть шлагбаум</button>
+      <button class="btn btn-success" style="align-self: end;" v-on:click.prevent="openBarrier">Открыть шлагбаум</button>
     </div>
   </div>
 </template>
@@ -15,8 +15,7 @@ module.exports = {
     return {
       guest: null,
       infoMessage: null,
-      expire: Date,
-      openButton: {}
+      expire: Date
     }
   },
   props:['id'],
@@ -59,7 +58,6 @@ module.exports = {
         const result = await axios.post(`/api/Guest/${this.id}`)
         this.guest = result.data
         this.updateMessage()
-        document.getElementById('guest').focus();
       }
       catch (error){
         this.infoMessage = this.errorMessage;
@@ -68,7 +66,7 @@ module.exports = {
   }
 }
 </script>
-<style>
+<style scoped>
 .vertical-align-center {
   height: 100%;
   display: flex;

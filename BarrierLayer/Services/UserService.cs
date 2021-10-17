@@ -60,7 +60,7 @@ namespace BarrierLayer.Services
         {
             await _config.VerifyPassword(password);
             var barriers = await _db.Barriers.ToListAsync();
-            return barriers.Select(b => new BarrierDto { Id = b.Id, Number = b.BarrierNumber }).ToList();
+            return barriers.Select(b => new BarrierDto { Id = b.Id, Number = b.BarrierNumber, Address = b.Address}).ToList();
         }
 
         public async Task AddBarrierToUser(int barrierId, string userNumber)

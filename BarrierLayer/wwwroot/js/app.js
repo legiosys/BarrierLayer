@@ -1,10 +1,15 @@
 ﻿Vue.use(VueRouter);
 Vue.use(httpVueLoader);
+Vue.use(VueClipboard);
 
 const routes = [
     {
         path: '/',
         component: { template: '<div>Barrier UI</div>' }
+    },
+    {
+        path: '/ui/admin/guest',
+        component: httpVueLoader('/components/guest/admin.vue')
     },
     {
         path: '/ui/guest/:id',
