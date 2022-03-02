@@ -22,5 +22,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css" />
+  </ItemGroup>
+
 
 </Project>
