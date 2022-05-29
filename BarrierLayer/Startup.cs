@@ -1,23 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using BarrierLayer.Barriers;
+using BarrierLayer.LibCandidates;
 using BarrierLayer.Models;
 using BarrierLayer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace BarrierLayer
@@ -34,7 +26,8 @@ namespace BarrierLayer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DomainContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("Barrier")));
+            services.AddPostgres<DomainContext>(Configuration, "postgres");
+
             services.AddScoped<BarrierFacadeFactory>();
             services.AddScoped<UserService>();
             services.AddScoped<ConfigService>();
@@ -46,7 +39,7 @@ namespace BarrierLayer
             services.AddSwaggerGenNewtonsoftSupport();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BarrierLayer Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "BarrierLayer Api", Version = "v1"});
             });
             services.AddMvc();
         }
@@ -54,11 +47,14 @@ namespace BarrierLayer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var appPrefix = Configuration.GetValue<PathString>("Prefix");
+            app.UsePathBase(appPrefix);
             var extensionProvider = new FileExtensionContentTypeProvider();
             extensionProvider.Mappings.Add(".vue", "text/html");
             app.UseStaticFiles(new StaticFileOptions()
             {
-                ContentTypeProvider = extensionProvider
+                ContentTypeProvider = extensionProvider,
+                //RequestPath = appPrefix
             });
             if (env.IsDevelopment())
             {
@@ -67,10 +63,7 @@ namespace BarrierLayer
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BarrierLayer API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint($"v1/swagger.json", "BarrierLayer API V1"); });
 
             app.UseRouting();
 
@@ -79,9 +72,11 @@ namespace BarrierLayer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute("", "/", new {controller = "home", action = "index"});
-                endpoints.MapControllerRoute("guest", "/ui/guest/{id:guid}", new {controller = "home", action = "index"});
-                endpoints.MapControllerRoute("guestAdmin", "/ui/admin/guest", new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("", "~/", new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("guest", "~/ui/guest/{id:guid}",
+                    new {controller = "home", action = "index"});
+                endpoints.MapControllerRoute("guestAdmin", "~/ui/admin/guest",
+                    new {controller = "home", action = "index"});
             });
         }
     }
