@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BarrierLayer.Dto;
+using BarrierLayer.LibCandidates.Vault;
 using BarrierLayer.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BarrierLayer.Controllers
 {
@@ -11,9 +13,11 @@ namespace BarrierLayer.Controllers
     public class GuestController : ControllerBase
     {
         private readonly GuestBarrierService _guestBarrierService;
+        private readonly IOptionsSnapshot<BarrierSettings> _dbSettings;
 
-        public GuestController(GuestBarrierService guestBarrierService)
+        public GuestController(GuestBarrierService guestBarrierService, IOptionsSnapshot<BarrierSettings> dbSettings)
         {
+            _dbSettings = dbSettings;
             _guestBarrierService = guestBarrierService;
         }
 
@@ -33,5 +37,8 @@ namespace BarrierLayer.Controllers
         [HttpPost("{guestId:guid}")]
         public async Task<GuestDto> OpenBarrier(Guid guestId)
             => await _guestBarrierService.OpenBarrier(guestId);
+
+        [HttpGet("afaf")]
+        public BarrierSettings GetSettings() => _dbSettings.Value;
     }
 }
