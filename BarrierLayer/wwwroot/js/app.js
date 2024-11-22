@@ -4,15 +4,15 @@ Vue.use(VueClipboard);
 
 const routes = [
     {
-        path: '/',
+        path: '~/',
         component: { template: '<div>Barrier UI</div>' }
     },
     {
-        path: '/ui/admin/guest',
+        path: '~/ui/admin/guest',
         component: httpVueLoader('/components/guest/admin.vue')
     },
     {
-        path: '/ui/guest/:id',
+        path: '~/ui/guest/:id',
         component: httpVueLoader('/components/guest/guest.vue'),
         props: true
     }
