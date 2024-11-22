@@ -54,7 +54,7 @@ module.exports = {
   },
   computed: {
     directLink(){
-      return `http://${location.host}${window.appPrefix}/ui/guest/${this.guest?.Id ?? ""}`;
+      return `https://${location.host}${window.appPrefix}/ui/guest/${this.guest?.Id ?? ""}`;
     },
     whatsAppLink(){
       return `https://wa.me?text=${encodeURIComponent('Ссылка для открытия шлагбаума: \t' + this.directLink)}`
