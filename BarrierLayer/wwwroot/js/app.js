@@ -9,11 +9,11 @@ const routes = [
     },
     {
         path: '/ui/admin/guest',
-        component: httpVueLoader('/barrier/components/guest/admin.vue')
+        component: httpVueLoader(window.appPrefix + '/components/guest/admin.vue')
     },
     {
         path: '/ui/guest/:id',
-        component: httpVueLoader('/barrier/components/guest/guest.vue'),
+        component: httpVueLoader(window.appPrefix + '/components/guest/guest.vue'),
         props: true
     }
 ];

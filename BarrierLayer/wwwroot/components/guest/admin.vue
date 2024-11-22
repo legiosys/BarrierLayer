@@ -54,7 +54,7 @@ module.exports = {
   },
   computed: {
     directLink(){
-      return `http://${location.host}/ui/guest/${this.guest?.Id ?? ""}`;
+      return `http://${location.host}${window.appPrefix}/ui/guest/${this.guest?.Id ?? ""}`;
     },
     whatsAppLink(){
       return `https://wa.me?text=${encodeURIComponent('Ссылка для открытия шлагбаума: \t' + this.directLink)}`
@@ -66,7 +66,7 @@ module.exports = {
   methods:{
     async getBarriers() {
       try{
-        const result = await axios.get(`/api/Conf/GetBarriers?password=${this.password}`)
+        const result = await axios.get(`${window.appPrefix}/api/Conf/GetBarriers?password=${this.password}`)
         this.barriers = result.data
       }
       catch (error){
@@ -75,7 +75,7 @@ module.exports = {
     },
     async createGuest(){
       try{
-        const result = await axios.post(`/api/Guest/Add?password=${this.password}&barrierId=${this.barrier}&expires=${this.expire}`)
+        const result = await axios.post(`${window.appPrefix}/api/Guest/Add?password=${this.password}&barrierId=${this.barrier}&expires=${this.expire}`)
         this.guest = result.data
       }
       catch (error){

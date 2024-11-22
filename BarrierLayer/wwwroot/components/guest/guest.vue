@@ -2,7 +2,8 @@
   <div class="text-center vertical-align-center">
     <div v-if="infoMessage" :class="infoMessage.classes">{{infoMessage.text}}</div>
     <div v-if="guest">
-      <p class="alert alert-success" role="alert">Гостевой доступ по адресу:<br><strong>{{ guest?.address }}</strong></p>
+      <p class="alert alert-success" role="alert">Гостевой доступ по адресу:<br><strong>{{ guest?.Address }}</strong>
+      </p>
       <p class="alert alert-info">Истекает: <br> <strong>{{ expire?.toLocaleString() ?? "" }}</strong></p>
       <button class="btn btn-success" style="align-self: end;" v-on:click.prevent="openBarrier">Открыть шлагбаум</button>
     </div>
@@ -33,7 +34,7 @@ module.exports = {
   methods: {
     async getGuest(){
         try{
-          const result = await axios.get(`/api/Guest/${this.id}`)
+          const result = await axios.get(`${window.appPrefix}/api/Guest/${this.id}`)
           this.guest = result.data
           this.updateMessage()
         }
@@ -43,11 +44,11 @@ module.exports = {
       
     },
     updateMessage(){
-      this.expire = this.guest ? new Date(this.guest.expires) : null;
+      this.expire = this.guest ? new Date(this.guest.Expires) : null;
       if(this.expire?.valueOf() < Date.now())
         this.infoMessage = {
           classes: "alert alert-warning",
-          text: `Гостевой доступ истек ${this.guest.expires}`
+          text: `Гостевой доступ истек ${this.guest.Expires}`
         }
       else {
         this.infoMessage = null;
@@ -55,7 +56,7 @@ module.exports = {
     },
     async openBarrier(){
       try{
-        const result = await axios.post(`/api/Guest/${this.id}`)
+        const result = await axios.post(`${window.appPrefix}/api/Guest/${this.id}`)
         this.guest = result.data
         this.updateMessage()
       }
