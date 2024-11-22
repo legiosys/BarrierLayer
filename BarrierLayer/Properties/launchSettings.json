@@ -22,9 +22,12 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "vaultUserName": "legio",
+        "vaultPassword": "16253160",
+        "vaultUrl": "http://192.168.13.1:8200"
       },
-      "applicationUrl": "http://localhost:5000"
+      "applicationUrl": "http://localhost:5123"
     },
     "Docker": {
       "commandName": "Docker",

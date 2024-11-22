@@ -1,8 +1,6 @@
-﻿using BarrierLayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
+using BarrierLayer.Domain.Dto;
 
 namespace BarrierLayer.Barriers
 {
@@ -14,11 +12,13 @@ namespace BarrierLayer.Barriers
             await Task.Delay(1);
             return new BarrierResponse();
         }
+
         public async Task<BarrierResponse> Register(string userNumber)
         {
             await Task.Delay(1);
             return new BarrierResponse();
         }
+
         public async Task<BarrierResponse> Confirm(string userNumber, string code)
         {
             await Task.Delay(1);
@@ -28,6 +28,7 @@ namespace BarrierLayer.Barriers
             };
         }
     }
+
     public interface IBarrierFacade
     {
         public Task<BarrierResponse> Open();
@@ -35,4 +36,3 @@ namespace BarrierLayer.Barriers
         public Task<BarrierResponse> Confirm(string userNumber, string code);
     }
 }
-

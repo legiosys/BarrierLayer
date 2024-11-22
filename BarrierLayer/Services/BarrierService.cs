@@ -1,33 +1,23 @@
-﻿using BarrierLayer.Barriers;
-using BarrierLayer.Dto;
-using BarrierLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using BarrierLayer.Barriers;
+using BarrierLayer.Db;
+using BarrierLayer.Domain.Dto;
+using BarrierLayer.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarrierLayer.Services
 {
-    public class BarrierService
+    public class BarrierService(DomainContext db, BarrierFacadeFactory barrierFactory)
     {
-        private readonly DomainContext _db;
-        private readonly BarrierFacadeFactory _barrierFactory;
-
-        public BarrierService(DomainContext db, BarrierFacadeFactory barrierFactory)
-        {
-            _db = db;
-            _barrierFactory = barrierFactory;
-        }
         private async Task<Barrier> GetBarrier(Guid userKey, int barrierId)
         {
-            var user = await _db.GetUserByToken(userKey);
+            var user = await db.GetUserByToken(userKey);
             if (user == null) throw new ArgumentException("Пользователь не найден");
             var barrier = user.Barriers.FirstOrDefault(b => b.BarrierId == barrierId);
             if (barrier == null) throw new ArgumentException("Шлагбаум не найден");
-            return await _db.GetBarrierById(barrierId);
+            return await db.GetBarrierById(barrierId);
         }
 
         public async Task Open(Guid userKey, int barrierId)
@@ -38,15 +28,16 @@ namespace BarrierLayer.Services
 
         public async Task Open(Barrier barrier)
         {
-            var barrierFacade = _barrierFactory.Create(barrier);
+            var barrierFacade = barrierFactory.Create(barrier);
             await barrierFacade.Open();
         }
-        
+
         public async Task<BarrierAddResult> Register(string userNumber, string barrierNumber, BarrierType type)
         {
             userNumber = userNumber.FormatToNumber();
             barrierNumber = barrierNumber.FormatToNumber();
-            var analog = await _db.Barriers.FirstOrDefaultAsync(b => b.BarrierType == type && b.UserNumber.Equals(userNumber));
+            var analog =
+                await db.Barriers.FirstOrDefaultAsync(b => b.BarrierType == type && b.UserNumber.Equals(userNumber));
             var barrier = new Barrier()
             {
                 BarrierNumber = barrierNumber,
@@ -57,39 +48,43 @@ namespace BarrierLayer.Services
                 barrier.Token = analog.Token;
             else
             {
-                var facade = _barrierFactory.Create(barrier);
+                var facade = barrierFactory.Create(barrier);
                 await facade.Register(userNumber);
             }
-            _db.Add(barrier);
-            await _db.SaveChangesAsync();
+
+            db.Add(barrier);
+            await db.SaveChangesAsync();
             return new BarrierAddResult()
             {
                 Id = barrier.Id,
                 Status = (analog == null) ? BarrierAddStatus.WaitForConfirmation : BarrierAddStatus.Confirmed
             };
-
         }
+
         public async Task<BarrierAddResult> Confirm(int barrierId, string smsCode)
         {
-            var barrier = await _db.Barriers.FirstOrDefaultAsync(b => b.Id == barrierId);
-            if (barrier == null) return new BarrierAddResult() { Id = barrierId, Status = BarrierAddStatus.Error };
+            var barrier = await db.Barriers.FirstOrDefaultAsync(b => b.Id == barrierId);
+            if (barrier == null) return new BarrierAddResult() {Id = barrierId, Status = BarrierAddStatus.Error};
             if (string.IsNullOrWhiteSpace(barrier.Token))
             {
-                var facade = _barrierFactory.Create(barrier);
-                var result = await facade.Confirm(barrier.UserNumber,smsCode);
+                var facade = barrierFactory.Create(barrier);
+                var result = await facade.Confirm(barrier.UserNumber, smsCode);
                 if (string.IsNullOrWhiteSpace(result.Key))
-                    return new BarrierAddResult() { Id = barrierId, Status = BarrierAddStatus.Error };
+                    return new BarrierAddResult() {Id = barrierId, Status = BarrierAddStatus.Error};
                 barrier.Token = result.Key;
-                _db.Update(barrier);
-                await _db.SaveChangesAsync();
+                db.Update(barrier);
+                await db.SaveChangesAsync();
             }
+
             return new BarrierAddResult()
             {
                 Id = barrier.Id,
                 Status = BarrierAddStatus.Confirmed
             };
         }
-        public async Task<BarrierAddResult> AddManual(string userNumber, string barrierNumber, BarrierType type, string token)
+
+        public async Task<BarrierAddResult> AddManual(string userNumber, string barrierNumber, BarrierType type,
+            string token)
         {
             userNumber = userNumber.FormatToNumber();
             barrierNumber = barrierNumber.FormatToNumber();
@@ -100,8 +95,8 @@ namespace BarrierLayer.Services
                 BarrierType = type,
                 Token = token
             };
-            _db.Add(barrier);
-            await _db.SaveChangesAsync();
+            db.Add(barrier);
+            await db.SaveChangesAsync();
             return new BarrierAddResult()
             {
                 Id = barrier.Id,

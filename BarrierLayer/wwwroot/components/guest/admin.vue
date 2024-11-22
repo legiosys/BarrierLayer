@@ -11,7 +11,7 @@
       <label for="barriers" class="col-sm-4">Шлагбаум</label>
       <div class="col-sm-4">
         <select id="barriers" v-model="barrier" class="form-control">
-          <option v-for="barrier in barriers" :value="barrier.id">{{ barrier.address }}</option>
+          <option v-for="barrier in barriers" :value="barrier.Id">{{ barrier.Address }}</option>
         </select>
       </div>
     </div>
@@ -27,10 +27,12 @@
     </div>
     <div v-if="guest" class="form-group row">
       <div class="col-sm-3"></div>
-      <label class="alert alert-success col-sm-4">{{ guest?.id }}</label>
+      <label class="alert alert-success col-sm-4">{{ guest?.Id }}</label>
       <div class="col-sm-2">
-        <a type="button" class="btn btn-success" :href="whatsAppLink"><i class="fa fa-whatsapp" style="font-size: large"></i></a>
-        <button class="btn btn-secondary" @click.prevent v-clipboard:copy="directLink"><i class="fa fa-copy" style="font-size: large"></i></button>
+        <a type="button" class="btn btn-success" :href="whatsAppLink"><i class="fa-brands fa-whatsapp"></i></a>
+        <a type="button" class="btn btn-info" :href="telegramLink"><i class="fa-brands fa-telegram"></i></a>
+        <button class="btn btn-secondary" @click.prevent v-clipboard:copy="directLink"><i class="fa-solid fa-copy"></i>
+        </button>
       </div>
     </div>
     <input type="hidden" id="directLink" :value="directLink">
@@ -52,10 +54,13 @@ module.exports = {
   },
   computed: {
     directLink(){
-      return `http://${location.host}/ui/guest/${this.guest?.id ?? ""}`;
+      return `http://${location.host}/ui/guest/${this.guest?.Id ?? ""}`;
     },
     whatsAppLink(){
       return `https://wa.me?text=${encodeURIComponent('Ссылка для открытия шлагбаума: \t' + this.directLink)}`
+    },
+    telegramLink() {
+      return `https://t.me/share/url?text=${encodeURIComponent('Ссылка для открытия шлагбаума')}&url=${this.directLink}`
     }
   },
   methods:{

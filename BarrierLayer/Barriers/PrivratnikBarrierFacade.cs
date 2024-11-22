@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BarrierLayer.Models;
+using BarrierLayer.Domain.Dto;
+using BarrierLayer.Domain.Models;
 using BarrierLayer.Services;
 using Flurl.Http;
 using Newtonsoft.Json;
