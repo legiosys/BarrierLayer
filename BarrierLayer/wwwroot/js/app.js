@@ -20,10 +20,11 @@ const routes = [
 
 let router = new VueRouter({
     mode: 'history',
-    routes: routes
+    routes: routes,
+    base: window.appPrefix
 });
 
-var app = new Vue({
+let app = new Vue({
     el: '#app',
     router
 });
